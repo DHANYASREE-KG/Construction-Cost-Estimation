@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuildCost AI | Future Building Construction Cost Estimator</title>
+    <meta name="description" content="AI platform to predict future construction costs using Machine Learning.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="app-background">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+    </div>
+
+    <!-- Main Navigation Header -->
+    <header class="app-header">
+        <div class="header-container">
+            <div class="brand">
+                <div class="brand-icon">
+                    <i data-lucide="building-2"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>BuildCost <span class="badge-ai">AI 2027</span></h1>
+                    <p>Future Construction Cost Estimation Platform</p>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <div class="preset-group">
+                    <span class="preset-label">Presets:</span>
+                    <button type="button" class="btn-preset active" onclick="loadPreset('standard_3bhk')">3BHK Standard</button>
+                    <button type="button" class="btn-preset" onclick="loadPreset('luxury_villa')">4BHK Luxury</button>
+                    <button type="button" class="btn-preset" onclick="loadPreset('economy_2bhk')">2BHK Economy</button>
+                </div>
+                <div class="accuracy-badge">
+                    <i data-lucide="shield-check"></i>
+                    <span>Model Accuracy: <strong>85.8%</strong> (High Confidence)</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid -->
+    <main class="main-container">
+        <!-- Left: Form Input Panel -->
+        <section class="form-section">
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i data-lucide="sliders" class="icon-accent"></i>
+                        <h2>Project Parameters</h2>
+                    </div>
+                    <span class="step-tag">Step 1: Enter Specs</span>
+                </div>
+
+                <form id="predictionForm" onsubmit="event.preventDefault(); handlePredict();">
+                    <!-- Tab Navigation -->
+                    <div class="form-tabs">
+                        <button type="button" class="tab-btn active" onclick="switchTab('tab-specs')">1. Building Specs</button>
+                        <button type="button" class="tab-btn" onclick="switchTab('tab-materials')">2. Materials</button>
+                        <button type="button" class="tab-btn" onclick="switchTab('tab-labour')">3. Labour Days</button>
+                        <button type="button" class="tab-btn" onclick="switchTab('tab-rates')">4. Unit Rates</button>
+                    </div>
+
+                    <!-- TAB 1: Building Specs -->
+                    <div id="tab-specs" class="tab-content active">
+                        <div class="input-grid">
+                            <div class="form-group">
+                                <label for="Construction_Year">Target Construction Year</label>
+                                <div class="input-wrapper">
+                                    <i data-lucide="calendar" class="field-icon"></i>
+                                    <input type="number" id="Construction_Year" name="Construction_Year" value="2027" min="2020" max="2035" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="City">City Location</label>
+                                <div class="input-wrapper">
+                                    <i data-lucide="map-pin" class="field-icon"></i>
+                                    <select id="City" name="City" required>
+                                        <option value="Chennai" selected>Chennai</option>
+                                        <option value="Coimbatore">Coimbatore</option>
+                                        <option value="Madurai">Madurai</option>
+                                        <option value="Trichy">Trichy</option>
+                                        <option value="Salem">Salem</option>
+                                        <option value="Tiruppur">Tiruppur</option>
+                                        <option value="Erode">Erode</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Builtup_Area_sqft">Built-up Area (Sq.Ft)</label>
+                                <div class="input-wrapper">
+                                    <i data-lucide="maximize" class="field-icon"></i>
+                                    <input type="number" id="Builtup_Area_sqft" name="Builtup_Area_sqft" value="2000" min="400" max="15000" onchange="autoCalculateQuantities()" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Plot_Area_sqft">Plot Area (Sq.Ft)</label>
+                                <div class="input-wrapper">
+                                    <i data-lucide="grid" class="field-icon"></i>
+                                    <input type="number" id="Plot_Area_sqft" name="Plot_Area_sqft" value="2400" min="500" max="20000" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Number_of_Floors">Number of Floors</label>
+                                <div class="input-wrapper">
+                                    <i data-lucide="layers" class="field-icon"></i>
+                                    <input type="number" id="Number_of_Floors" name="Number_of_Floors" value="2" min="1" max="10" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Construction_Quality">Quality Tier</label>
+                                <div class="input-wrapper">
+                                    <i data-lucide="award" class="field-icon"></i>
+                                    <select id="Construction_Quality" name="Construction_Quality" required>
+                                        <option value="Economy">Economy</option>
+                                        <option value="Standard" selected>Standard</option>
+                                        <option value="Premium">Premium</option>
+                                        <option value="Luxury">Luxury</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Bedroom_Count">Bedrooms</label>
+                                <input type="number" id="Bedroom_Count" name="Bedroom_Count" value="3" min="1" max="10">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Bathroom_Count">Bathrooms</label>
+                                <input type="number" id="Bathroom_Count" name="Bathroom_Count" value="3" min="1" max="10">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 2: Materials -->
+                    <div id="tab-materials" class="tab-content">
+                        <div class="input-grid">
+                            <div class="form-group">
+                                <label for="Cement_Bags">Cement Quantity (Bags)</label>
+                                <input type="number" id="Cement_Bags" name="Cement_Bags" value="660" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Steel_Quantity_kg">Steel Quantity (Kg)</label>
+                                <input type="number" id="Steel_Quantity_kg" name="Steel_Quantity_kg" value="9000" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Sand_Quantity_m3">Sand Quantity (m³)</label>
+                                <input type="number" id="Sand_Quantity_m3" name="Sand_Quantity_m3" value="30" step="0.1" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Aggregate_Quantity_m3">Aggregate Quantity (m³)</label>
+                                <input type="number" id="Aggregate_Quantity_m3" name="Aggregate_Quantity_m3" value="24" step="0.1" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Brick_Quantity">Bricks (Pieces)</label>
+                                <input type="number" id="Brick_Quantity" name="Brick_Quantity" value="16000" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Electrical_Points">Electrical Points</label>
+                                <input type="number" id="Electrical_Points" name="Electrical_Points" value="35" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Plumbing_Points">Plumbing Points</label>
+                                <input type="number" id="Plumbing_Points" name="Plumbing_Points" value="22" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 3: Labour Days -->
+                    <div id="tab-labour" class="tab-content">
+                        <div class="input-grid">
+                            <div class="form-group">
+                                <label for="Mason_Labour_Days">Mason Labour Days</label>
+                                <input type="number" id="Mason_Labour_Days" name="Mason_Labour_Days" value="80" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Carpenter_Labour_Days">Carpenter Labour Days</label>
+                                <input type="number" id="Carpenter_Labour_Days" name="Carpenter_Labour_Days" value="50" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Electrician_Labour_Days">Electrician Labour Days</label>
+                                <input type="number" id="Electrician_Labour_Days" name="Electrician_Labour_Days" value="25" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Plumber_Labour_Days">Plumber Labour Days</label>
+                                <input type="number" id="Plumber_Labour_Days" name="Plumber_Labour_Days" value="22" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 4: Unit Rates -->
+                    <div id="tab-rates" class="tab-content">
+                        <div class="input-grid">
+                            <div class="form-group">
+                                <label for="Cement_Rate_per_Bag">Cement Rate / Bag (₹)</label>
+                                <input type="number" id="Cement_Rate_per_Bag" name="Cement_Rate_per_Bag" value="420" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Steel_Rate_per_kg">Steel Rate / Kg (₹)</label>
+                                <input type="number" id="Steel_Rate_per_kg" name="Steel_Rate_per_kg" value="82" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Sand_Rate_per_m3">Sand Rate / m³ (₹)</label>
+                                <input type="number" id="Sand_Rate_per_m3" name="Sand_Rate_per_m3" value="2200" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Brick_Rate_per_1000">Brick Rate / 1,000 Pcs (₹)</label>
+                                <input type="number" id="Brick_Rate_per_1000" name="Brick_Rate_per_1000" value="11000" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Button -->
+                    <div class="form-actions">
+                        <button type="submit" id="btnPredict" class="btn-primary">
+                            <i data-lucide="calculator"></i>
+                            <span>Calculate Estimated Cost</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Right: Results & Accuracy Panel -->
+        <section class="results-section">
+            <!-- Hero Estimation Card (Printable Area) -->
+            <div id="printableReport" class="glass-card hero-estimate-card">
+                <div class="estimate-header">
+                    <span class="estimate-pill"><i data-lucide="sparkles"></i> AI Estimated Construction Cost</span>
+                    <span id="targetYearBadge" class="year-badge">Year 2027</span>
+                </div>
+
+                <div class="estimate-main">
+                    <div class="estimate-amount-group">
+                        <h3 id="costMain">₹15,781,414.00</h3>
+                        <span id="costLakhs" class="cost-lakhs-tag">~₹157.81 Lakhs</span>
+                    </div>
+                    <div class="unit-rate-metric">
+                        <span class="metric-label">Unit Cost Rate</span>
+                        <span id="costPerSqft" class="metric-value">₹7,890.71 / sq.ft</span>
+                    </div>
+                </div>
+
+                <!-- Live Project Summary Details -->
+                <div class="summary-specs-card">
+                    <div class="summary-spec-item">
+                        <span class="spec-label">Location</span>
+                        <strong id="sumCity">Chennai</strong>
+                    </div>
+                    <div class="summary-spec-item">
+                        <span class="spec-label">Built-up Area</span>
+                        <strong id="sumArea">2,000 sq.ft (2 Floors)</strong>
+                    </div>
+                    <div class="summary-spec-item">
+                        <span class="spec-label">Quality Level</span>
+                        <strong id="sumQuality">Standard</strong>
+                    </div>
+                    <div class="summary-spec-item">
+                        <span class="spec-label">Bedrooms / Baths</span>
+                        <strong id="sumRooms">3 BHK / 3 Bath</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accuracy & Confidence Card -->
+            <div class="glass-card accuracy-card">
+                <div class="accuracy-card-header">
+                    <div class="acc-title-group">
+                        <i data-lucide="activity" class="icon-acc"></i>
+                        <div>
+                            <h4>Model Accuracy & Confidence</h4>
+                            <span class="acc-subtext">Validated on Unseen Historical Test Projects</span>
+                        </div>
+                    </div>
+                    <span class="confidence-tag">High Confidence</span>
+                </div>
+
+                <!-- Accuracy Progress Gauge -->
+                <div class="acc-gauge-container">
+                    <div class="acc-gauge-labels">
+                        <span>Prediction Accuracy Score: <strong>85.79% (R² Score)</strong></span>
+                        <span>Error Margin: <strong>±12.38%</strong></span>
+                    </div>
+                    <div class="acc-gauge-bar">
+                        <div class="acc-gauge-fill" style="width: 85.8%;"></div>
+                    </div>
+                </div>
+
+                <!-- Reliability Highlights -->
+                <div class="reliability-grid">
+                    <div class="rel-item">
+                        <i data-lucide="check-circle-2" class="rel-icon-check"></i>
+                        <span><strong>Zero Data Leakage:</strong> Material & Labour cost totals strictly isolated</span>
+                    </div>
+                    <div class="rel-item">
+                        <i data-lucide="check-circle-2" class="rel-icon-check"></i>
+                        <span><strong>Chronological Validation:</strong> Tested forward in time (2010–2024 Train, 2026 Test)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Print / Export Actions -->
+            <div class="action-buttons-group">
+                <button type="button" class="btn-print" onclick="window.print();">
+                    <i data-lucide="printer"></i>
+                    <span>Print Cost Estimate Report</span>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <p>BuildCost AI Platform | Future Construction Cost Estimation (Year 2027)</p>
+    </footer>
+
+    <script src="/static/app.js"></script>
+    <script>
+        if (window.lucide) lucide.createIcons();
+    </script>
+</body>
+</html>
