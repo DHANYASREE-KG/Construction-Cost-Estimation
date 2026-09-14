@@ -1,495 +1,652 @@
-# 🏗️ BuildCost AI – Construction Cost Prediction
+🏗️ BuildCost AI – Construction Cost Prediction
 
-## 📌 Project Overview
+📌 Project Overview
 
-BuildCost AI is an AI-powered application designed to predict residential building construction costs using historical construction data and project parameters. The system combines machine learning and deep learning techniques with a FastAPI backend and web interface to provide data-driven preliminary construction cost estimates.
+BuildCost AI is an AI-powered construction cost prediction system designed to estimate future residential building construction costs. The system uses historical construction data, building parameters, material quantities, labour metrics, material rate information, and machine learning models to generate cost estimates.
 
----
+The project combines a FastAPI backend, a web-based frontend, and trained XGBoost and PyTorch models to provide construction cost predictions through an interactive dashboard and REST API.
 
-## 🚀 Features
+🚀 Features
 
-- 🤖 AI-based construction cost prediction
-- 🏠 Residential construction cost estimation
-- 📊 Historical construction data analysis
-- 📈 Future construction cost prediction
-- 🧱 Construction material analysis
-- 👷 Labour requirement analysis
-- 💰 Preliminary construction cost estimation
-- 📅 Year-based cost prediction
-- 🧠 XGBoost machine learning model
-- 🔥 PyTorch neural network
-- ⚡ FastAPI backend
-- 🌐 Interactive web interface
-- 📚 Swagger API documentation
-- 🔄 Automated feature engineering
-- 📊 Model evaluation using regression metrics
+🔮 Future residential construction cost prediction
 
----
+🤖 Machine learning-based cost estimation
 
-## 🧠 Machine Learning Models
+🌳 XGBoost model for the best-performing prediction
 
-### XGBoost
+🧠 PyTorch deep neural network for prediction comparison
 
-The project uses an **XGBoost regression model** for construction cost prediction. The model learns relationships between construction parameters and historical construction costs.
+📊 Comparison with Random Forest, Linear Regression, and CatBoost
 
-**Trained Model:**
+🏠 Supports multiple building and construction parameters
 
-```text
-models/future_construction_cost_model.pkl
-PyTorch
+🧱 Material quantity and labour-based cost breakdown
 
-A PyTorch neural network is also implemented for construction cost prediction.
+📈 Construction cost trends and metadata
 
-Trained Model:
+🌐 Interactive web dashboard
 
-models/pytorch_construction_model.pth
-📊 Dataset
+⚡ FastAPI REST API
 
-The project uses historical construction data containing information about residential construction projects.
+📚 Swagger API documentation
 
-The dataset includes parameters such as:
+🛡️ Data leakage prevention
 
-Construction year
-City
-Plot area
-Built-up area
-Number of floors
-House type
-Construction quality
-Number of bedrooms
-Number of bathrooms
-Foundation type
-Steel quantity
-Cement quantity
-Sand quantity
-Aggregate quantity
-Brick quantity
-Electrical points
-Plumbing points
-Labour requirements
-Material rates
+📅 Chronological train, validation, and test strategy
 
-Dataset:
+🧠 Machine Learning Models
 
-dataset/Construction_ML_Dataset_1000.csv
+The system evaluates multiple machine learning approaches:
+
+Model
+
+R² Score
+
+MAPE
+
+MAE
+
+XGBoost Tuned
+
+0.8579
+
+12.38%
+
+₹19,92,493
+
+Random Forest
+
+0.8549
+
+11.76%
+
+₹19,38,307
+
+Linear Regression
+
+0.8474
+
+13.28%
+
+₹20,82,620
+
+PyTorch Deep NN
+
+0.8395
+
+12.58%
+
+₹20,58,362
+
+CatBoost
+
+0.8241
+
+13.83%
+
+₹21,67,312
+
+🏆 Best Performing Model
+
+The Tuned XGBoost model provides the best overall R² performance:
+
+R²: 85.79%
+
+MAPE: 12.38%
+
+MAE: ₹19.92 Lakhs
+
+RMSE: ₹25.04 Lakhs
+
+🗂️ Dataset
+
+The project uses:
+
+Construction_ML_Dataset_1000.csv
+
+Dataset Details
+
+Records: 1,000 historical construction projects
+
+Years: 2010–2026
+
+Application: Residential construction cost prediction
+
+Testing: Unseen 2026 construction data
+
+The chronological evaluation strategy is:
+
+Training Data  →  2010–2024
+Validation     →  2025
+Testing        →  Unseen 2026
+
+This approach helps evaluate how well the model can predict future construction costs rather than simply memorizing randomly split historical records.
+
+🛡️ Data Leakage Prevention
+
+The project separates material and labour cost information to reduce artificial inflation and data leakage during model training.
+
+The prediction pipeline primarily uses construction characteristics, quantities, rates, building information, and engineered features to estimate future costs.
+
 ⚙️ Feature Engineering
 
-The system generates additional features from the original construction parameters to improve model performance.
+The backend generates additional features from the input data:
 
-Engineered Features
 Building_Age
+
 Area_per_Floor
+
 Cement_per_sqft
+
 Steel_per_sqft
+
 Sand_per_sqft
+
 Brick_per_sqft
 
-These features help the machine learning models understand relationships between:
+Total_Labour_Days
 
-Building age
-Building size
-Floor area
-Material consumption
-Construction requirements
-Material usage per square foot
+Labour_Day_per_sqft
+
+Material_Rate_Index
+
+These derived features help the models capture relationships between building size, material consumption, labour requirements, and construction cost.
+
 🏗️ System Architecture
-                         ┌───────────────────┐
-                         │       User        │
-                         └─────────┬─────────┘
-                                   │
-                                   ▼
-                         ┌───────────────────┐
-                         │   Web Interface   │
-                         │    HTML/CSS/JS    │
-                         └─────────┬─────────┘
-                                   │
-                                   ▼
-                         ┌───────────────────┐
-                         │  FastAPI Backend  │
-                         │      REST API     │
-                         └─────────┬─────────┘
-                                   │
-                    ┌──────────────┴──────────────┐
-                    │                             │
-                    ▼                             ▼
-           ┌─────────────────┐           ┌─────────────────┐
-           │  XGBoost Model  │           │ PyTorch Model   │
-           │   Regression    │           │ Neural Network  │
-           └────────┬────────┘           └────────┬────────┘
-                    │                             │
-                    └──────────────┬──────────────┘
-                                   │
-                                   ▼
-                         ┌───────────────────┐
-                         │ Construction Cost │
-                         │    Prediction     │
-                         └─────────┬─────────┘
-                                   │
-                                   ▼
-                         ┌───────────────────┐
-                         │  Display Result   │
-                         └───────────────────┘
+
+                 ┌─────────────────────────┐
+                 │      Web Frontend        │
+                 │ HTML + CSS + JavaScript  │
+                 └────────────┬────────────┘
+                              │
+                              ▼
+                 ┌─────────────────────────┐
+                 │       FastAPI           │
+                 │       Backend           │
+                 └────────────┬────────────┘
+                              │
+             ┌────────────────┼────────────────┐
+             │                │                │
+             ▼                ▼                ▼
+       ┌───────────┐    ┌───────────┐    ┌───────────┐
+       │ XGBoost   │    │  PyTorch  │    │ Historical│
+       │   Model   │    │    NN     │    │   Data    │
+       └─────┬─────┘    └─────┬─────┘    └───────────┘
+             │                │
+             └────────┬───────┘
+                      ▼
+             ┌──────────────────┐
+             │ Cost Prediction  │
+             │ + Cost Breakdown │
+             └──────────────────┘
+
 🔄 Prediction Workflow
+
 User Input
     ↓
-Input Validation
-    ↓
-Data Preprocessing
+Building & Construction Parameters
     ↓
 Feature Engineering
     ↓
-Feature Transformation
+Data Preprocessing
     ↓
-Machine Learning Model
+Machine Learning Models
     ↓
-Construction Cost Prediction
+XGBoost + PyTorch Prediction
     ↓
-Result Processing
+Cost Calculation & Breakdown
     ↓
-Display Estimated Cost
-📂 Project Structure
-construction-price-prediction/
+Final Construction Cost Estimate
+
+📁 Project Structure
+
+construction-price-prediction-/
 │
 ├── backend/
 │   ├── main.py
 │   └── models.py
 │
+├── dataset/
+│   └── Construction_ML_Dataset_1000.csv
+│
 ├── frontend/
+│   ├── app.js
 │   ├── index.html
-│   ├── styles.css
-│   └── app.js
+│   └── styles.css
 │
 ├── models/
 │   ├── future_construction_cost_model.pkl
 │   └── pytorch_construction_model.pth
 │
-├── dataset/
-│   └── Construction_ML_Dataset_1000.csv
-│
-├── run.py
-├── start.bat
+├── README.md
 ├── requirements.txt
-└── README.md
+├── run.py
+└── start.bat
+
 🛠️ Technologies Used
-Programming Language
-Python 3
-Machine Learning
-XGBoost
-PyTorch
-Scikit-learn
-Pandas
-NumPy
-Joblib
+
 Backend
+
+Python
+
 FastAPI
-Pydantic
+
 Uvicorn
+
+Pydantic
+
+Machine Learning
+
+XGBoost
+
+PyTorch
+
+Scikit-learn
+
+CatBoost
+
+Random Forest
+
+Linear Regression
+
+Data Processing
+
+Pandas
+
+NumPy
+
+Joblib
+
 Frontend
-HTML
-CSS
+
+HTML5
+
+CSS3
+
 JavaScript
-Data
-CSV
-Historical construction datasets
+
 📦 Python Libraries
 
-The main libraries used in the project include:
+Install the required dependencies using:
 
-pandas
-numpy
-scikit-learn
-xgboost
-torch
+pip install -r requirements.txt
+
+Main dependencies include:
+
 fastapi
 uvicorn
 pydantic
+pandas
+numpy
+scikit-learn
 joblib
+torch
+xgboost
+catboost
 
-Install all dependencies using:
+💻 Installation
 
-pip install -r requirements.txt
-⚙️ Installation
-Step 1: Clone the Repository
-git clone <repository-url>
-Step 2: Navigate to the Project
-cd construction-price-prediction
-Step 3: Create a Virtual Environment
+1. Clone the Repository
+
+git clone <your-repository-url>
+cd construction-price-prediction-
+
+2. Create a Virtual Environment
+
 python -m venv venv
-Step 4: Activate the Virtual Environment
+
+3. Activate the Virtual Environment
+
 Windows
+
 venv\Scripts\activate
+
 Linux / macOS
+
 source venv/bin/activate
-Step 5: Install Dependencies
+
+4. Install Dependencies
+
 pip install -r requirements.txt
+
 ▶️ Running the Application
 
-Run the application using:
+You can start the application using:
 
 python run.py
 
-For Windows, the application can also be started using:
+Or on Windows:
 
 start.bat
-🌐 Access the Application
 
-After starting the application, open:
+The FastAPI server runs at:
 
 http://127.0.0.1:8000
 
-The web interface allows users to enter construction-related parameters and receive a predicted construction cost.
+🌐 Application
+
+Open the following URL in your browser:
+
+http://127.0.0.1:8000
+
+The web interface allows users to enter building and construction information and receive a predicted construction cost.
 
 📚 API Documentation
 
-The project uses FastAPI, which automatically provides interactive API documentation.
+FastAPI automatically provides Swagger documentation.
 
 Open:
 
 http://127.0.0.1:8000/docs
 
-The Swagger UI can be used to:
+Main API Endpoints
 
-View available API endpoints
-Enter prediction parameters
-Send requests
-View API responses
-Test the prediction service
-🎯 Input Parameters
+Endpoint
 
-The prediction system can use construction parameters including:
+Method
 
-Construction year
-City
-Plot area
-Built-up area
-Number of floors
-House type
-Construction quality
-Number of bedrooms
-Number of bathrooms
-Hall and kitchen information
-Foundation type
-Steel quantity
-Cement quantity
-Sand quantity
-Aggregate quantity
-Brick quantity
-Electrical points
-Plumbing points
-Labour requirements
-Material rates
-📈 Model Evaluation
+Purpose
 
-The project evaluates construction cost prediction using historical construction data and future-oriented validation.
+/api/health
 
-The model evaluation considers metrics such as:
+GET
 
-R² Score
-Mean Absolute Percentage Error (MAPE)
-Prediction Accuracy
+Check API health
 
-A chronological evaluation strategy can be used to simulate real-world future prediction.
+/api/metadata
 
-Historical Data
-      ↓
-Training Data
-      ↓
-Validation Data
-      ↓
-Future/Test Data
-      ↓
-Model Evaluation
-🔐 Data Leakage Prevention
+GET
 
-The project considers data leakage during model development.
+Retrieve cities, qualities, and historical trends
 
-Target-related cost information is separated from the prediction features where appropriate so that the model does not simply reproduce the target value.
+/api/evaluation
 
-This allows the model to learn meaningful relationships from construction characteristics such as:
+GET
 
-Building area
-Construction year
-Number of floors
-Material consumption
-Labour requirements
-Building characteristics
-🎯 Project Objectives
+View model evaluation results
 
-The main objectives of this project are:
+/api/predict
 
-Automate preliminary construction cost estimation
-Apply machine learning to construction planning
-Apply deep learning to construction cost prediction
-Predict future construction costs
-Reduce manual estimation effort
-Analyze construction-related parameters
-Provide data-driven cost estimates
-Develop an easy-to-use web application
-Demonstrate AI applications in residential construction
-💡 Applications
+POST
 
-The system can support:
+Generate construction cost prediction
 
-🏠 Homeowners
-🏗️ Builders
-👷 Contractors
-📐 Architects
-📊 Quantity Surveyors
-🏢 Real Estate Professionals
-🏘️ Construction Planners
+🧾 Prediction Inputs
 
-The system can provide an initial cost estimate during the planning stage before detailed professional estimation.
+The prediction API accepts building, material, labour, and rate-related information.
 
-🎓 Learning Outcomes
-
-Through this project, the following technical skills are demonstrated:
-
-Machine Learning
-Deep Learning
-Regression
-Feature Engineering
-Data Preprocessing
-Model Training
-Model Evaluation
-Python Programming
-XGBoost
-PyTorch
-FastAPI Development
-REST API Development
-Frontend Development
-AI-based Cost Prediction
-Construction Data Analysis
-🔍 Key Machine Learning Concepts
-
-The project demonstrates:
-
-Concept	Purpose
-Regression	Predict continuous construction costs
-Feature Engineering	Create useful features from raw data
-Data Preprocessing	Prepare data for model training
-XGBoost	Gradient boosting regression
-PyTorch	Neural network-based prediction
-Model Evaluation	Measure prediction performance
-Train/Test Split	Evaluate model generalization
-Chronological Validation	Simulate future prediction
-🔄 End-to-End System
-Construction Dataset
-        ↓
-Data Cleaning
-        ↓
-Feature Engineering
-        ↓
-Data Preprocessing
-        ↓
-Feature Selection
-        ↓
-Model Training
-        ↓
-XGBoost / PyTorch
-        ↓
-Model Evaluation
-        ↓
-Save Trained Model
-        ↓
-FastAPI Backend
-        ↓
-Web Application
-        ↓
-User Construction Parameters
-        ↓
-Prediction
-        ↓
-Estimated Construction Cost
-🏠 Construction Cost Prediction
-
-The system takes construction-related inputs from the user and processes them through the trained machine learning model.
-
-Input Parameters
-       ↓
-Building Information
-       ↓
-Material Information
-       ↓
-Labour Information
-       ↓
-Feature Engineering
-       ↓
-Trained Model
-       ↓
-Predicted Construction Cost
-📊 Example Prediction Process
-User enters:
+Building Parameters
 
 Construction Year
+
+City
+
 Plot Area
+
 Built-up Area
+
 Number of Floors
+
 House Type
+
 Construction Quality
-Material Quantities
-Labour Requirements
-        ↓
-System processes the inputs
-        ↓
-Feature engineering
-        ↓
-Machine learning prediction
-        ↓
-Estimated Construction Cost
-🔮 Future Enhancements
 
-Possible future improvements include:
+Bedroom Count
 
-Integration with live material prices
-Location-specific construction cost prediction
-Real-time market price updates
-Cloud deployment
-Database integration
-Advanced visualization dashboards
-Larger construction datasets
-Improved deep learning architectures
-Mobile application support
-Automated PDF cost reports
-Construction material price forecasting
-Regional cost comparison
-User authentication
-Historical prediction tracking
-📌 Advantages
-Reduces manual calculation effort
-Provides quick preliminary estimates
-Uses historical construction information
-Supports future cost prediction
-Combines machine learning and deep learning
-Provides a web-based interface
-Can be integrated with other construction planning systems
-Helps users make early budgeting decisions
+Bathroom Count
+
+Hall Count
+
+Kitchen Count
+
+Foundation Type
+
+Material Parameters
+
+Steel Quantity
+
+Cement Bags
+
+Sand Quantity
+
+Aggregate Quantity
+
+Brick Quantity
+
+Labour Parameters
+
+Mason Labour Days
+
+Carpenter Labour Days
+
+Electrician Labour Days
+
+Plumber Labour Days
+
+Material Rates
+
+Cement Rate per Bag
+
+Steel Rate per kg
+
+Sand Rate per m³
+
+Brick Rate per 1000
+
+📊 Model Evaluation
+
+The model was evaluated using unseen construction data from 2026.
+
+Evaluation Metrics
+
+The project uses:
+
+R² Score
+
+MAPE
+
+MAE
+
+RMSE
+
+Overall Performance
+
+R² Score          : 85.79%
+Mean Accuracy     : 87.62%
+Average Error     : 12.38%
+Test MAE          : ₹19.92 Lakhs
+Test Year         : 2026
+Training Years    : 2010–2024
+
+🧠 PyTorch Deep Neural Network
+
+The project also implements a PyTorch neural network for construction cost prediction.
+
+Architecture:
+
+Input Features
+      ↓
+Linear Layer
+      ↓
+Batch Normalization
+      ↓
+ReLU
+      ↓
+Dropout
+      ↓
+Linear Layer
+      ↓
+Batch Normalization
+      ↓
+ReLU
+      ↓
+Dropout
+      ↓
+Linear Layer
+      ↓
+ReLU
+      ↓
+Output Layer
+
+The neural network is used alongside the XGBoost model for prediction comparison.
+
+🎯 Project Objectives
+
+Predict future residential construction costs.
+
+Use historical construction data for machine learning.
+
+Incorporate building, material, labour, and rate parameters.
+
+Engineer meaningful construction-related features.
+
+Compare different machine learning models.
+
+Reduce data leakage during model development.
+
+Provide predictions through a user-friendly web interface.
+
+Expose the prediction system through a REST API.
+
+🏠 Applications
+
+This system can support:
+
+Residential construction planning
+
+Preliminary construction budgeting
+
+Cost estimation
+
+Contractor planning
+
+Material planning
+
+Labour planning
+
+Construction project analysis
+
+Early-stage financial decision making
+
+📈 Key Machine Learning Concepts
+
+Concept
+
+Usage
+
+Feature Engineering
+
+Construction-specific derived features
+
+Regression
+
+Predict construction cost
+
+XGBoost
+
+Primary prediction model
+
+Deep Learning
+
+PyTorch neural network
+
+Model Comparison
+
+Evaluate multiple algorithms
+
+Chronological Split
+
+Future-oriented evaluation
+
+Data Leakage Prevention
+
+Avoid artificial prediction performance
+
+Evaluation Metrics
+
+R², MAPE, MAE, RMSE
+
+🔍 Example Prediction Process
+
+Input:
+    Built-up Area
+    Number of Floors
+    Construction Quality
+    Material Quantities
+    Labour Days
+    Material Rates
+        ↓
+Feature Engineering
+        ↓
+Preprocessing
+        ↓
+XGBoost Model
+        +
+PyTorch Model
+        ↓
+Predicted Construction Cost
+        ↓
+Cost per Square Foot
+        +
+Material/Labour Breakdown
+
+🌟 Advantages
+
+Uses real construction-related parameters.
+
+Supports future cost prediction.
+
+Uses multiple machine learning algorithms.
+
+Provides model performance comparison.
+
+Includes construction-specific feature engineering.
+
+Provides an interactive web interface.
+
+Provides REST API access.
+
+Uses chronological evaluation to simulate future prediction.
+
+Provides cost breakdown information.
+
 ⚠️ Limitations
 
-The prediction depends on the quality and range of the historical dataset.
+Prediction accuracy depends on the quality and representativeness of the historical dataset.
 
-Actual construction costs may differ because of:
+Actual construction costs can vary based on market conditions, location, contractor pricing, material availability, and project-specific requirements.
 
-Material price fluctuations
-Labour rate changes
-Location
-Transportation costs
-Site conditions
-Design modifications
-Construction quality
-Government taxes
-Market conditions
-Unexpected construction expenses
-⚠️ Disclaimer
+The system is intended for estimation and planning rather than a final construction quotation.
 
-The predicted construction cost is an AI-based preliminary estimate.
+🔮 Future Enhancements
 
-Actual construction costs may vary depending on location, material prices, labour rates, design changes, site conditions, transportation costs, taxes, construction quality, and other real-world factors.
+Real-time material price integration
 
-The prediction should therefore be used as a planning and budgeting reference and not as a final construction quotation.
+Live inflation and market index updates
 
-🚀 Future Scope
+Larger and more diverse construction datasets
 
-The project can be extended into a complete AI-assisted construction planning platform by integrating:
+Advanced time-series forecasting
+
+Regional construction cost modeling
+
+Cloud deployment
+
+User authentication
+
+Database integration
+
+PDF cost estimation reports
+
+Interactive cost trend visualization
+
+Explainable AI for prediction interpretation
+
+Mobile-friendly application
+
+📌 Future Scope
+
+The system can be extended into a complete AI-assisted construction planning platform by integrating:
 
 Cost Prediction
       +
@@ -497,26 +654,28 @@ Material Estimation
       +
 Labour Estimation
       +
-Future Price Forecasting
+Inflation Forecasting
       +
-Residential Layout Planning
+3D Building Visualization
       +
-3D Visualization
-      +
-Automated Cost Reports
+Project Budget Planning
 
-This can help create an integrated intelligent system for residential construction planning and estimation.
+⚠️ Disclaimer
 
-📜 License
+The predicted construction cost is an estimated value generated using machine learning models and historical data. It should be used for preliminary planning and budgeting purposes only and should not be considered a final construction quotation.
 
-This project is developed for academic, educational, and research purposes.
+📄 License
 
-👤 Author
+This project is intended for academic and educational purposes.
 
-Construction Price Prediction – AI Project
+👨‍💻 Author
+
+Your Name
+
+Computer Science / Information Technology Student
 
 ⭐ Conclusion
 
-BuildCost AI demonstrates the integration of Machine Learning, Deep Learning, FastAPI, and web technologies to develop an intelligent residential construction cost prediction system.
+BuildCost AI demonstrates how machine learning can be applied to residential construction cost estimation. By combining construction parameters, material quantities, labour metrics, engineered features, and multiple machine learning models, the system provides a practical approach for estimating future construction costs through both a web interface and REST API.
 
-By analyzing historical construction data and project parameters, the system provides data-driven preliminary construction cost estimates that can assist homeowners, builders, contractors, architects, and construction planners during the planning and budgeting stages.
+The Tuned XGBoost model achieved an R² score of 85.79% on the project's evaluation setup, making it the best-performing model among the evaluated approaches.
